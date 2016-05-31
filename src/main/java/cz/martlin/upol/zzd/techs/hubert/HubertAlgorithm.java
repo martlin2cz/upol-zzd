@@ -2,120 +2,116 @@ package cz.martlin.upol.zzd.techs.hubert;
 
 import java.util.Set;
 
-import cz.martlin.upol.zzd.common.abstracts.DistanceMeasure;
-import cz.martlin.upol.zzd.common.abstracts.MergeDistComputer;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.common.abstracts.PkProperty;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
-import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.clustering.Dendrogram;
+import cz.martlin.upol.zzd.techs.clustering.ObjectsDoublesMatrix;
 import cz.martlin.upol.zzd.techs.proximity.ProximityMatrix;
 import cz.martlin.upol.zzd.utils.Utils;
 
 public class HubertAlgorithm<T extends DataObject> {
 
-	private static final int M_INC_STEP = 1;
 	private final PkProperty<T> property;
-	private final DistanceMeasure<T> distancer;
-	private final MergeDistComputer merger;
+	private final DisimmilarityComputer<T> disimr;
+	private final DisimmilaritiesMerger merger;
 
-	public HubertAlgorithm(PkProperty<T> property, DistanceMeasure<T> distances, MergeDistComputer merger) {
+	public HubertAlgorithm(PkProperty<T> property, DisimmilarityComputer<T> disims, DisimmilaritiesMerger merger) {
 		super();
 		this.property = property;
-		this.distancer = distances;
+		this.disimr = disims;
 		this.merger = merger;
 	}
 
-	public Dendrogram<T> doit(Set<T> objects) {
-		// step 1
-		int m = 0;
-
-		// ObjectsDoublesMatrix<T> matrix = new ObjectsDoublesMatrix<>(objects,
-		// this.distances);
-		ClustersSet<T> clusters = Utils.createSingletons(objects);
-
-		ThresholdGraph<T> graph = new ThresholdGraph<>(objects, distancer, m);
-		ProximityMatrix<T> distances = new ProximityMatrix<T>(objects, distancer, merger);
-
+	public Dendrogram<T> run(Set<T> objects) {
 		Dendrogram<T> result = new Dendrogram<>();
-		result.add(m, clusters);
+		ObjectsDoublesMatrix<T> graphGdisims = new ObjectsDoublesMatrix<>(objects, disimr);
+		ProximityMatrix<T> currentDistances = new ProximityMatrix<>(objects, disimr, merger);
 
-		while (clusters.size() > 1) {
+		// Step 1
+		int m = 0;
+		ClustersSet<T> clustering;
+		double proximity = 0.0;
+
+		clustering = Utils.createSingletons(objects);
+		result.add(proximity, clustering);
+
+		do {
+			// currentDistances.print(System.out);
+
 			// step 2
-			ClustersTuple<T> minimal = null;
-			double minValueOfFunct = 0.0;
+			ComputedNextClustering<T> computed = computeNextClustering(clustering, graphGdisims, currentDistances);
 
-			for (ClustersTuple<T> tuple : distances) {
-				if (tuple.isSymetry()) {
-					continue;
-				}
+			clustering = computed.getUpdatedClustering();
+			proximity = computed.getProximity();
 
-				Double valueOfFunct = functionQ(distances, graph, clusters, tuple.getRow(), tuple.getCol());
+			result.add(proximity, clustering);
+			// System.out.println("Updt to: (@" + proximity +") " + clustering);
 
-				if (valueOfFunct != null) {
-					if (minimal == null || minValueOfFunct > valueOfFunct) {
-						minimal = tuple;
-						minValueOfFunct = valueOfFunct;
-					}
-				}
-			}
-
-			if (minimal != null) {
-				result.add(m, clusters);
-				clusters = new ClustersSet<>(clusters);
-				clusters.merge(minimal.getRow(), minimal.getCol());
-				distances.mergeClusters(minimal.getRow(), minimal.getCol());
-			} else {
-				//XXX System.out.println("yea, no matching found @ " + m + " , man!");
-				// XXX testing/debug
-			}
+			currentDistances.mergeClusters(computed.getFromFirst(), computed.getFromSecond());
 
 			// step 3
-			m += M_INC_STEP;
-		}
+			m++;
+		} while (clustering.size() > 1);
 
-		result.add(m, clusters);
 		return result;
 	}
 
-	protected Double functionQ(ProximityMatrix<T> distances, ThresholdGraph<T> graph, ClustersSet<T> clusters,
-			Cluster<T> clusterR, Cluster<T> clusterT) {
+	private ComputedNextClustering<T> computeNextClustering(ClustersSet<T> currentClustering,
+			ObjectsDoublesMatrix<T> graphGdisims, ProximityMatrix<T> currentDistances) {
 
-		Cluster<T> joinOfRT = Utils.mergeClusters(clusterR, clusterT);
-		ThresholdGraph<T> subgraph = graph.subgraph(joinOfRT);
+		double minValue = Double.MAX_VALUE;
+		ClustersTuple<T> minClusters = null;
 
-		Double min = null;
-
-		for (ClustersTuple<T> tupleIJ : distances) {
-			// for (Cluster<T> clusterI : clusters) {
-			// for (Cluster<T> clusterJ : clusters) {
-			// ClustersTuple<T> tupleIJ = new ClustersTuple<>(clusterI,
-			// clusterJ);
-			if (tupleIJ.isSymetry()) {
+		// System.out.println("\nLooping over: " + currentClustering);
+		for (ClustersTuple<T> tupleRT : currentDistances) {
+			if (tupleRT.isSymetry()) {
 				continue;
 			}
 
-			double distOfIJ = distances.getAt(tupleIJ);
-			ThresholdGraph<T> subgraphOfIJ = new ThresholdGraph<>(subgraph, distOfIJ);
-
-			boolean matches = property.matches(subgraphOfIJ);
-
-			if (matches) {
-				if (min == null || min > distOfIJ) {
-					min = distOfIJ;
-				}
+			double value = functionQ(tupleRT, graphGdisims, currentDistances);
+			// System.out.println("Q_ is " + value + " for " +
+			// (currentDistances.getAt(tupleRT)) + ", " + tupleRT);
+			// System.out.println("--------------------------------");
+			if (value < minValue || minClusters == null) {
+				minClusters = tupleRT;
+				minValue = value;
 			}
-			// }
-			// }
-
 		}
 
-		// System.out.println("-----------------------------------------------------------------------
-		// ");
-		// System.out.println(" -> " + min);
-		// System.out.println("-----------------------------------------------------------------------
-		// ");
+		// System.out.println("Finally computed Q_ is " + minValue + " for " +
+		// minClusters + "\n============================================");
 
-		return min;
+		return ComputedNextClustering.create(minClusters, currentClustering, minValue);
+	}
+
+	private double functionQ(ClustersTuple<T> tupleRT, ObjectsDoublesMatrix<T> graphGdisims,
+			ProximityMatrix<T> currentDistances) {
+
+		double minDistance = Double.POSITIVE_INFINITY;
+		Set<T> subgraphNodes = Utils.mergeClusters(tupleRT.getRow(), tupleRT.getCol());
+
+		for (ClustersTuple<T> tupleIJ : currentDistances) {
+			if (tupleIJ.isSymetry()) {
+				continue;
+			}
+			// System.out.println("subgraph for tuple " + tupleIJ + " with
+			// following threshold");
+			double disim = currentDistances.getAt(tupleIJ);
+			ThresholdGraph<T> subgraph = ThresholdGraph.createSubgraph(graphGdisims, subgraphNodes, disim);
+			// subgraph.print(System.out);
+			boolean matches = property.matches(subgraph);
+			// System.out.println("Matches? " + matches + "\n");
+
+			if (matches) {
+				if (disim < minDistance) {
+					minDistance = disim;
+				}
+			}
+		}
+
+		return minDistance;
 	}
 
 }

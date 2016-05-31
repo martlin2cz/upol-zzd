@@ -5,13 +5,13 @@ import cz.martlin.upol.zzd.techs.clustering.Cluster;
 public class _XXX_ProximityMatrixField<T> {
 	private final Cluster<T> row;
 	private final Cluster<T> column;
-	private final double distance;
+	private final double disim;
 
-	public _XXX_ProximityMatrixField(Cluster<T> row, Cluster<T> column, double distance) {
+	public _XXX_ProximityMatrixField(Cluster<T> row, Cluster<T> column, double disim) {
 		super();
 		this.row = row;
 		this.column = column;
-		this.distance = distance;
+		this.disim = disim;
 	}
 
 	public Cluster<T> getRow() {
@@ -23,7 +23,7 @@ public class _XXX_ProximityMatrixField<T> {
 	}
 
 	public double getDistance() {
-		return distance;
+		return disim;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class _XXX_ProximityMatrixField<T> {
 		final int prime = 31;
 		int result = 1;
 		long temp;
-		temp = Double.doubleToLongBits(distance);
+		temp = Double.doubleToLongBits(disim);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((row == null) ? 0 : row.hashCode());
 		result = prime * result + ((column == null) ? 0 : column.hashCode());
@@ -47,7 +47,7 @@ public class _XXX_ProximityMatrixField<T> {
 		if (getClass() != obj.getClass())
 			return false;
 		_XXX_ProximityMatrixField<?> other = (_XXX_ProximityMatrixField<?>) obj;
-		if (Double.doubleToLongBits(distance) != Double.doubleToLongBits(other.distance))
+		if (Double.doubleToLongBits(disim) != Double.doubleToLongBits(other.disim))
 			return false;
 		if (row == null) {
 			if (other.row != null)
@@ -64,7 +64,7 @@ public class _XXX_ProximityMatrixField<T> {
 
 	@Override
 	public String toString() {
-		return "<|r=" + row + ", c=" + column + ", dist=" + distance + "|>";
+		return "<|r=" + row + ", c=" + column + ", dist=" + disim + "|>";
 	}
 	
 	

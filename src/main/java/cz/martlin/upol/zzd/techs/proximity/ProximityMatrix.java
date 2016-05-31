@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import cz.martlin.upol.zzd.common.abstracts.DistanceMeasure;
-import cz.martlin.upol.zzd.common.abstracts.MergeDistComputer;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.clustering.ObjectsDoublesMatrix;
@@ -15,19 +15,19 @@ import cz.martlin.upol.zzd.utils.Printable;
 import cz.martlin.upol.zzd.utils.Utils;
 
 public class ProximityMatrix<T extends DataObject> implements Iterable<ClustersTuple<T>>, Printable {
-	private final MergeDistComputer merger;
+	private final DisimmilaritiesMerger merger;
 
 	private final ObjectsDoublesMatrix<T> matrix;
 
-	public ProximityMatrix(Set<T> initials, DistanceMeasure<T> distances, MergeDistComputer merger) {
+	public ProximityMatrix(Set<T> initials, DisimmilarityComputer<T> disims, DisimmilaritiesMerger merger) {
 		super();
 
 		this.merger = merger;
-		this.matrix = new ObjectsDoublesMatrix<T>(initials, distances);
+		this.matrix = new ObjectsDoublesMatrix<T>(initials, disims);
 
 	}
 
-	public ProximityMatrix(ObjectsDoublesMatrix<T> matrix, MergeDistComputer merger) {
+	public ProximityMatrix(ObjectsDoublesMatrix<T> matrix, DisimmilaritiesMerger merger) {
 		this.merger = merger;
 		this.matrix = matrix;
 	}
@@ -55,7 +55,7 @@ public class ProximityMatrix<T extends DataObject> implements Iterable<ClustersT
 
 			double mergedValue;
 			if (!cluster.equals(destCluster)) {
-				mergedValue = merger.mergeDistances(destValue, srcValue);
+				mergedValue = merger.mergeDisimmilarities(destValue, srcValue);
 			} else {
 				mergedValue = 0.0;
 			}
@@ -77,6 +77,42 @@ public class ProximityMatrix<T extends DataObject> implements Iterable<ClustersT
 	public void print(PrintStream to) {
 		to.println("Proximity matrix");
 		matrix.print(to);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((matrix == null) ? 0 : matrix.hashCode());
+		result = prime * result + ((merger == null) ? 0 : merger.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProximityMatrix<?> other = (ProximityMatrix<?>) obj;
+		if (matrix == null) {
+			if (other.matrix != null)
+				return false;
+		} else if (!matrix.equals(other.matrix))
+			return false;
+		if (merger == null) {
+			if (other.merger != null)
+				return false;
+		} else if (!merger.equals(other.merger))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ProximityMatrix [matrix=" + matrix + ", merger=" + merger + "]";
 	}
 
 }

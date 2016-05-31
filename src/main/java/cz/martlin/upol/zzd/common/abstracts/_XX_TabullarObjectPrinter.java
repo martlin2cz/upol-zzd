@@ -37,7 +37,7 @@ public class _XX_TabullarObjectPrinter<C extends DataObject, V> implements Print
 	private void printFields(PrintStream to, Map<C, Integer> labels) {
 
 		for (Cluster<C> row : table.getClusters()) {
-			Utils.printCluster(to, row, labels);
+			Utils.printCluster(to, row, labels, -1);
 			to.print("\t");
 
 			for (Cluster<C> col : table.getClusters()) {
@@ -55,7 +55,7 @@ public class _XX_TabullarObjectPrinter<C extends DataObject, V> implements Print
 		to.print("\t");
 
 		for (Cluster<C> cluster : table.getClusters()) {
-			Utils.printCluster(to, cluster, labels);
+			Utils.printCluster(to, cluster, labels, -1);
 
 			to.print("\t");
 		}

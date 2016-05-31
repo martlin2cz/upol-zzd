@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import cz.martlin.upol.zzd.common.abstracts.DistanceMeasure;
-import cz.martlin.upol.zzd.common.abstracts.MergeDistComputer;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.utils.Printable;
 import cz.martlin.upol.zzd.utils.Utils;
@@ -21,15 +21,15 @@ public class _Backup_ProximityMatrix<T> /*implements Printable */ {
 	private final Set<Cluster<T>> rows;
 	private final Set<Cluster<T>> columns;
 
-	public _Backup_ProximityMatrix(Set<T> initials, DistanceMeasure<T> distances, MergeDistComputer merger) {
+	public _Backup_ProximityMatrix(Set<T> initials, DistanceMeasure<T> disims, MergeDistComputer merger) {
 		super();
-		this.fields = initFields(initials, distances);
+		this.fields = initFields(initials, disims);
 		this.rows = Utils.createSingletons(initials);
 		this.columns = Utils.createSingletons(initials);
 		this.merger = merger;
 	}
 
-	private static <T> Set<_XXX_ProximityMatrixField<T>> initFields(Set<T> initials, DistanceMeasure<T> distances) {
+	private static <T> Set<_XXX_ProximityMatrixField<T>> initFields(Set<T> initials, DistanceMeasure<T> disims) {
 		Set<_XXX_ProximityMatrixField<T>> fields = new LinkedHashSet<>(initials.size() * initials.size());
 
 		for (T first : initials) {
@@ -38,8 +38,8 @@ public class _Backup_ProximityMatrix<T> /*implements Printable */ {
 			for (T second : initials) {
 				Cluster<T> secondSingleton = Utils.createSingleton(second);
 
-				double distance = distances.distance(first, second);
-				_XXX_ProximityMatrixField<T> field = new _XXX_ProximityMatrixField<>(firstSingleton, secondSingleton, distance);
+				double disim = disims.disim(first, second);
+				_XXX_ProximityMatrixField<T> field = new _XXX_ProximityMatrixField<>(firstSingleton, secondSingleton, disim);
 
 				fields.add(field);
 			}
@@ -157,9 +157,9 @@ public class _Backup_ProximityMatrix<T> /*implements Printable */ {
 			for (Cluster<T> row : rows) {
 				int rowIndex = indexes.get(column);
 				int colIndex = indexes.get(row);
-				double distance = dists[rowIndex][colIndex];
+				double disim = dists[rowIndex][colIndex];
 
-				to.print(distance);
+				to.print(disim);
 				to.print("\t");
 			}
 			to.println();
@@ -173,9 +173,9 @@ public class _Backup_ProximityMatrix<T> /*implements Printable */ {
 		for (_XXX_ProximityMatrixField<T> field : fields) {
 			int row = indexes.get(field.getRow());
 			int col = indexes.get(field.getColumn());
-			double distance = field.getDistance();
+			double disim = field.getDistance();
 
-			dists[row][col] = distance;
+			dists[row][col] = disim;
 		}
 		return dists;
 	}

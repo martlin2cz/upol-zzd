@@ -11,20 +11,21 @@ import cz.martlin.upol.zzd.utils.Printable;
 import cz.martlin.upol.zzd.utils.Utils;
 
 public class Dendrogram<T extends DataObject> implements Printable {
-	private final Map<Integer, ClustersSet<T>> clusters;
+	private static final int SPACING = 6;
+	private final Map<Double, ClustersSet<T>> clusters;
 
-//	public Dendrogram(Map<Integer, Set<Cluster<T>>> clusters) {
-//		super();
-//		this.clusters = clusters;
-//	}
+	// public Dendrogram(Map<Integer, Set<Cluster<T>>> clusters) {
+	// super();
+	// this.clusters = clusters;
+	// }
 
 	public Dendrogram() {
 		super();
 		this.clusters = new LinkedHashMap<>();
 	}
 
-	public void add(int m, ClustersSet<T> clusters) {
-		this.clusters.put(m, clusters);
+	public void add(double proximity, ClustersSet<T> clustering) {
+		clusters.put(proximity, clustering);
 	}
 
 	@Override
@@ -61,12 +62,12 @@ public class Dendrogram<T extends DataObject> implements Printable {
 	public void print(PrintStream to) {
 		Map<T, Integer> labels = Utils.computeLabelsOf(clusters.values());
 
-		for (Entry<Integer, ClustersSet<T>> entry : clusters.entrySet()) {
-			to.print("at " + entry.getKey() + ": ");
+		for (Entry<Double, ClustersSet<T>> entry : clusters.entrySet()) {
+			to.printf("at %8.2f: ", entry.getKey());
 			to.print("[");
 			for (Cluster<T> cluster : entry.getValue()) {
-				Utils.printCluster(to, cluster, labels);
-				to.print(",");
+				Utils.printCluster(to, cluster, labels, SPACING);
+				to.print(",\t");
 			}
 			to.print("]");
 			to.println();

@@ -2,17 +2,17 @@ package cz.martlin.upol.zzd.datasets.ints;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
 
-public class IntDataObject implements DataObject {
+public class NumericDataObject implements DataObject {
 	private static final long serialVersionUID = -989805760149754017L;
 
-	private final int value;
+	private final double value;
 
-	public IntDataObject(int value) {
+	public NumericDataObject(double value) {
 		super();
 		this.value = value;
 	}
 
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
 
@@ -20,7 +20,9 @@ public class IntDataObject implements DataObject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + value;
+		long temp;
+		temp = Double.doubleToLongBits(value);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -32,21 +34,21 @@ public class IntDataObject implements DataObject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IntDataObject other = (IntDataObject) obj;
-		if (value != other.value)
+		NumericDataObject other = (NumericDataObject) obj;
+		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "IntObj(" + value + ")";
+		return "Num(" + value + ")";
 	}
 
 	@Override
 	public int compareTo(DataObject o) {
-		IntDataObject d = (IntDataObject) o;
-		return Integer.compare(this.value, d.value);
+		NumericDataObject d = (NumericDataObject) o;
+		return Double.compare(this.value, d.value);
 	}
 
 }

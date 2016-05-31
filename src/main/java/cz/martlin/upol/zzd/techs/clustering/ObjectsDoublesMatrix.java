@@ -1,7 +1,9 @@
 package cz.martlin.upol.zzd.techs.clustering;
 
 import java.io.PrintStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -9,13 +11,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import cz.martlin.upol.zzd.common.abstracts.DistanceMeasure;
+import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
 import cz.martlin.upol.zzd.techs.hubert.ClustersTuple;
 import cz.martlin.upol.zzd.utils.Printable;
 import cz.martlin.upol.zzd.utils.Utils;
 
 public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, Iterable<ClustersTuple<T>> {
+	private static final int SPACING = 6;
 	private final Double[][] matrix;
 	private final Map<Integer, Cluster<T>> clusters;
 
@@ -26,13 +29,20 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		this.clusters = new TreeMap<>();
 	}
 
-	public ObjectsDoublesMatrix(Set<T> initials, DistanceMeasure<T> distances) {
+	public ObjectsDoublesMatrix(Set<T> initials, DisimmilarityComputer<T> disims) {
 		super();
 
 		this.matrix = new Double[initials.size()][initials.size()];
 		this.clusters = new TreeMap<>();
 
-		initFields(initials, distances);
+		initFields(initials, disims);
+	}
+
+	public ObjectsDoublesMatrix(ObjectsDoublesMatrix<T> other) {
+		super();
+
+		this.matrix = Utils.deepCopy2DimArr(Double.class, other.matrix);
+		this.clusters = new TreeMap<>(other.clusters);
 	}
 
 	public Collection<Cluster<T>> getClusters() {
@@ -44,7 +54,7 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		return new MatrixIterator<>(this);
 	}
 
-	private void initFields(Set<T> objects, DistanceMeasure<T> distances) {
+	private void initFields(Set<T> objects, DisimmilarityComputer<T> disims) {
 
 		List<T> objectsList = new ArrayList<>(objects);
 
@@ -55,7 +65,7 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 
 			for (int j = 0; j < objects.size(); j++) {
 				T objectSecond = objectsList.get(j);
-				double dist = distances.distance(object, objectSecond);
+				double dist = disims.disimmilarityOf(object, objectSecond);
 				matrix[i][j] = dist;
 			}
 		}
@@ -72,11 +82,16 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		return matrix[rowIndex][colIndex];
 	}
 
+	public void setAt(ClustersTuple<T> tuple, Double value) {
+		setAt(tuple.getRow(), tuple.getCol(), value);
+	}
+
 	public void setAt(Cluster<T> row, Cluster<T> column, Double value) {
 		int rowIndex = Utils.findKeyOf(clusters, row);
 		int colIndex = Utils.findKeyOf(clusters, column);
 
 		matrix[rowIndex][colIndex] = value;
+		matrix[colIndex][rowIndex] = value;
 	}
 
 	public void replaceClusterWith(Cluster<T> oldCluster, Cluster<T> newCluster) {
@@ -105,7 +120,7 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 	private void printFields(PrintStream to, Map<T, Integer> labels) {
 
 		for (Cluster<T> row : clusters.values()) {
-			Utils.printCluster(to, row, labels);
+			Utils.printCluster(to, row, labels, SPACING);
 			to.print("\t");
 
 			for (Cluster<T> col : clusters.values()) {
@@ -123,7 +138,7 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		to.print("\t");
 
 		for (Cluster<T> cluster : clusters.values()) {
-			Utils.printCluster(to, cluster, labels);
+			Utils.printCluster(to, cluster, labels, SPACING);
 
 			to.print("\t");
 		}
@@ -135,11 +150,47 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		int rowIndex = Utils.findKeyOf(clusters, row);
 		int colIndex = Utils.findKeyOf(clusters, col);
 
+		DecimalFormat format = new DecimalFormat("0.####");
 		if (colIndex >= rowIndex) {
 			double value = matrix[colIndex][rowIndex];
-			to.printf("% 6.2f", value);
+			to.print(format.format(value));
+			//to.printf("% " + SPACING + "f", value);
 		} else {
-			to.printf("%6s", " ");
+			to.printf("%" + SPACING + "s", " ");
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((clusters == null) ? 0 : clusters.hashCode());
+		result = prime * result + Arrays.deepHashCode(matrix);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ObjectsDoublesMatrix<?> other = (ObjectsDoublesMatrix<?>) obj;
+		if (clusters == null) {
+			if (other.clusters != null)
+				return false;
+		} else if (!clusters.equals(other.clusters))
+			return false;
+		if (!Arrays.deepEquals(matrix, other.matrix))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ObjectsDoublesMatrix [clusters=" + clusters + ", matrix=" + "..." + "]";
+	}
+
 }

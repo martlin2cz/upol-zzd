@@ -1,6 +1,8 @@
 package cz.martlin.upol.zzd.utils;
 
 import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +66,19 @@ public class Utils {
 		return cluster;
 	}
 
+	public static <T extends DataObject> ClustersSet<T> replaceWithMerged(ClustersSet<T> clustering, Cluster<T> first,
+			Cluster<T> second) {
+
+		Cluster<T> merged = mergeClusters(first, second);
+		ClustersSet<T> newClustering = new ClustersSet<>(clustering);
+
+		newClustering.remove(first);
+		newClustering.remove(second);
+		newClustering.add(merged);
+
+		return newClustering;
+	}
+
 	public static <T extends DataObject> void printLabels(PrintStream to, Map<T, Integer> labels) {
 		to.println("Where:");
 		for (Integer label : new TreeSet<>(labels.values())) {
@@ -94,7 +109,7 @@ public class Utils {
 		return labels;
 	}
 
-	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, Map<T, Integer> labels) {
+	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, Map<T, Integer> labels, int spacing) {
 		StringBuilder stb = new StringBuilder();
 
 		for (T item : cluster) {
@@ -103,7 +118,19 @@ public class Utils {
 			stb.append(index);
 		}
 
-		to.printf("%6s", stb.toString());
+		to.printf("%s", stb.toString());
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T[][] deepCopy2DimArr(Class<T> clazz, T[][] matrix) {
+		T[] tmpArr = (T[]) Array.newInstance(clazz, 0);
+		T[][] result = (T[][]) Array.newInstance(tmpArr.getClass(), matrix.length);
+
+		for (int i = 0; i < matrix.length; i++) {
+			result[i] = Arrays.copyOf(matrix[i], matrix.length);
+		}
+
+		return result;
 	}
 
 }
