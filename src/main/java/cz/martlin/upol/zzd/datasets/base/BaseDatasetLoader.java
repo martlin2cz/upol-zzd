@@ -12,7 +12,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 
-public abstract class BaseDatasetLoader<T> {
+public abstract class BaseDatasetLoader<T extends DataObject> {
 
 	private final String fileName;
 	private final CSVFormat format;
@@ -23,7 +23,7 @@ public abstract class BaseDatasetLoader<T> {
 		this.format = format;
 	}
 
-	public List<T> load() throws IllegalArgumentException {
+	public Dataset<T> load() throws IllegalArgumentException {
 		try {
 			return loadFromResourcesFile(fileName);
 		} catch (IOException e) {
@@ -31,7 +31,7 @@ public abstract class BaseDatasetLoader<T> {
 		}
 	}
 
-	public List<T> loadFromResourcesFile(String fileName) throws IOException {
+	public Dataset<T> loadFromResourcesFile(String fileName) throws IOException {
 		InputStream ins = null;
 		Reader reader = null;
 		CSVParser parser = null;
@@ -40,7 +40,8 @@ public abstract class BaseDatasetLoader<T> {
 			ins = getClass().getClassLoader().getResourceAsStream(fileName);
 			reader = new InputStreamReader(ins);
 			parser = new CSVParser(reader, format);
-			return extractFromCSV(parser);
+			List<T> list = extractFromCSV(parser);
+			return new Dataset<>(list);
 		} finally {
 			IOUtils.closeQuietly(ins);
 			IOUtils.closeQuietly(reader);

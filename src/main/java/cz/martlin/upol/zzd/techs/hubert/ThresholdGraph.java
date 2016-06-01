@@ -28,10 +28,10 @@ public class ThresholdGraph<T extends DataObject> implements Printable, Iterable
 		this.matrix = other.matrix;
 	}
 
-	public ThresholdGraph(Set<T> cluster, DisimmilarityComputer<T> disims, double threshold) {
+	public ThresholdGraph(Set<T> objects, DisimmilarityComputer<T> disims, double threshold) {
 		super();
 		this.threshold = threshold;
-		Set<T> nodes = cluster;
+		Set<T> nodes = objects;
 		this.matrix = new ObjectsDoublesMatrix<>(nodes, disims);
 	}
 
@@ -42,6 +42,13 @@ public class ThresholdGraph<T extends DataObject> implements Printable, Iterable
 		DisimmilarityComputer<T> disims = new OnMatrixDistMeasure<T>(matrix);
 		Set<T> nodes = cluster;
 		this.matrix = new ObjectsDoublesMatrix<>(nodes, disims);
+	}
+
+	public ThresholdGraph(Set<Cluster<T>> clusters, ObjectsDoublesMatrix<T> matrix, double threshold) {
+		super();
+		this.threshold = threshold;
+
+		this.matrix = new ObjectsDoublesMatrix<>(matrix, clusters);
 	}
 
 	public Collection<Cluster<T>> getNodes() {
@@ -63,6 +70,10 @@ public class ThresholdGraph<T extends DataObject> implements Printable, Iterable
 
 	public ThresholdGraph<T> subgraph(Set<T> by) {
 		return new ThresholdGraph<>(matrix, by, threshold);
+	}
+
+	public ThresholdGraph<T> subgraphBy(Set<Cluster<T>> by) {
+		return new ThresholdGraph<>(by, matrix, threshold);
 	}
 
 	@Override

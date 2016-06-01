@@ -8,26 +8,36 @@ import cz.martlin.upol.zzd.common.abstracts.PkProperty;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
 import cz.martlin.upol.zzd.techs.clustering.Dendrogram;
 import cz.martlin.upol.zzd.techs.clustering.ObjectsDoublesMatrix;
-import cz.martlin.upol.zzd.techs.proximity.ProximityMatrix;
 import cz.martlin.upol.zzd.utils.Utils;
 
+/**
+ * 
+ * @see page 77
+ * @author martin
+ * 
+ * @param <T>
+ */
 public class HubertAlgorithm<T extends DataObject> {
 
 	private final PkProperty<T> property;
-	private final DisimmilarityComputer<T> disimr;
 	private final DisimmilaritiesMerger merger;
 
-	public HubertAlgorithm(PkProperty<T> property, DisimmilarityComputer<T> disims, DisimmilaritiesMerger merger) {
+	public HubertAlgorithm(PkProperty<T> property, DisimmilaritiesMerger merger) {
 		super();
 		this.property = property;
-		this.disimr = disims;
 		this.merger = merger;
 	}
 
-	public Dendrogram<T> run(Set<T> objects) {
+	public Dendrogram<T> run(Set<T> objects, DisimmilarityComputer<T> disimr) {
+		ObjectsDoublesMatrix<T> distances = new ObjectsDoublesMatrix<>(objects, disimr);
+		return run(objects, distances);
+	}
+
+	public Dendrogram<T> run(Set<T> objects, ObjectsDoublesMatrix<T> distances) {
 		Dendrogram<T> result = new Dendrogram<>();
-		ObjectsDoublesMatrix<T> graphGdisims = new ObjectsDoublesMatrix<>(objects, disimr);
-		ProximityMatrix<T> currentDistances = new ProximityMatrix<>(objects, disimr, merger);
+
+		ObjectsDoublesMatrix<T> graphGdisims = new ObjectsDoublesMatrix<>(distances);
+		ProximityMatrix<T> currentDistances = new ProximityMatrix<>(distances, merger);
 
 		// Step 1
 		int m = 0;
@@ -35,54 +45,47 @@ public class HubertAlgorithm<T extends DataObject> {
 		double proximity = 0.0;
 
 		clustering = Utils.createSingletons(objects);
-		result.add(proximity, clustering);
-
+		ComputedNextClustering<T> initial = new ComputedNextClustering<>(null, null, null, clustering, proximity);
+		result.add(m, initial);
+		m++;
+		
 		do {
-			// currentDistances.print(System.out);
 
 			// step 2
 			ComputedNextClustering<T> computed = computeNextClustering(clustering, graphGdisims, currentDistances);
 
-			clustering = computed.getUpdatedClustering();
-			proximity = computed.getProximity();
-
-			result.add(proximity, clustering);
-			// System.out.println("Updt to: (@" + proximity +") " + clustering);
+			result.add(m, computed);
 
 			currentDistances.mergeClusters(computed.getFromFirst(), computed.getFromSecond());
+			clustering = computed.getUpdatedClustering();
 
 			// step 3
 			m++;
 		} while (clustering.size() > 1);
 
 		return result;
+
 	}
 
 	private ComputedNextClustering<T> computeNextClustering(ClustersSet<T> currentClustering,
 			ObjectsDoublesMatrix<T> graphGdisims, ProximityMatrix<T> currentDistances) {
 
-		double minValue = Double.MAX_VALUE;
+		double minValue = Double.POSITIVE_INFINITY;
 		ClustersTuple<T> minClusters = null;
 
-		// System.out.println("\nLooping over: " + currentClustering);
 		for (ClustersTuple<T> tupleRT : currentDistances) {
 			if (tupleRT.isSymetry()) {
 				continue;
 			}
 
 			double value = functionQ(tupleRT, graphGdisims, currentDistances);
-			// System.out.println("Q_ is " + value + " for " +
-			// (currentDistances.getAt(tupleRT)) + ", " + tupleRT);
-			// System.out.println("--------------------------------");
 			if (value < minValue || minClusters == null) {
 				minClusters = tupleRT;
 				minValue = value;
 			}
 		}
 
-		// System.out.println("Finally computed Q_ is " + minValue + " for " +
-		// minClusters + "\n============================================");
-
+		
 		return ComputedNextClustering.create(minClusters, currentClustering, minValue);
 	}
 
@@ -96,13 +99,11 @@ public class HubertAlgorithm<T extends DataObject> {
 			if (tupleIJ.isSymetry()) {
 				continue;
 			}
-			// System.out.println("subgraph for tuple " + tupleIJ + " with
-			// following threshold");
+
 			double disim = currentDistances.getAt(tupleIJ);
 			ThresholdGraph<T> subgraph = ThresholdGraph.createSubgraph(graphGdisims, subgraphNodes, disim);
-			// subgraph.print(System.out);
+
 			boolean matches = property.matches(subgraph);
-			// System.out.println("Matches? " + matches + "\n");
 
 			if (matches) {
 				if (disim < minDistance) {
@@ -110,7 +111,7 @@ public class HubertAlgorithm<T extends DataObject> {
 				}
 			}
 		}
-
+		
 		return minDistance;
 	}
 

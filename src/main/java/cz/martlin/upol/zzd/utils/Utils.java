@@ -109,7 +109,8 @@ public class Utils {
 		return labels;
 	}
 
-	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, Map<T, Integer> labels, int spacing) {
+	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, Map<T, Integer> labels,
+			int spacing) {
 		StringBuilder stb = new StringBuilder();
 
 		for (T item : cluster) {
@@ -128,6 +129,18 @@ public class Utils {
 
 		for (int i = 0; i < matrix.length; i++) {
 			result[i] = Arrays.copyOf(matrix[i], matrix.length);
+		}
+
+		return result;
+	}
+
+	public static <T> Map<Integer, T> numerify(Set<T> set) {
+		Map<Integer, T> result = new HashMap<>(set.size());
+		int i = 0;
+
+		for (T object : set) {
+			result.put(i, object);
+			i++;
 		}
 
 		return result;

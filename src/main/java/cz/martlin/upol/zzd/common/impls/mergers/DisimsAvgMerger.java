@@ -1,4 +1,4 @@
-package cz.martlin.upol.zzd.datasets.ints;
+package cz.martlin.upol.zzd.common.impls.mergers;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
 

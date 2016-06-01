@@ -1,4 +1,4 @@
-package cz.martlin.upol.zzd.datasets.ints;
+package cz.martlin.upol.zzd.common.impls.props;
 
 import cz.martlin.upol.zzd.common.abstracts.PkProperty;
 import cz.martlin.upol.zzd.datasets.base.DataObject;

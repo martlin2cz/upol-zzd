@@ -45,6 +45,15 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		this.clusters = new TreeMap<>(other.clusters);
 	}
 
+	public ObjectsDoublesMatrix(ObjectsDoublesMatrix<T> other, Set<Cluster<T>> on) {
+		super();
+
+		this.matrix = Utils.deepCopy2DimArr(Double.class, other.matrix);
+		this.clusters = Utils.numerify(on);
+
+		initFields(other, on);
+	}
+
 	public Collection<Cluster<T>> getClusters() {
 		return clusters.values();
 	}
@@ -68,6 +77,15 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 				double dist = disims.disimmilarityOf(object, objectSecond);
 				matrix[i][j] = dist;
 			}
+		}
+	}
+
+	private void initFields(ObjectsDoublesMatrix<T> other, Set<Cluster<T>> on) {
+		for (Cluster<T> row: on) {
+			for (Cluster<T> col: on) {
+				double value = other.getAt(row, col);
+				this.setAt(row,  col, value);
+			}	
 		}
 	}
 
@@ -154,7 +172,7 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		if (colIndex >= rowIndex) {
 			double value = matrix[colIndex][rowIndex];
 			to.print(format.format(value));
-			//to.printf("% " + SPACING + "f", value);
+			// to.printf("% " + SPACING + "f", value);
 		} else {
 			to.printf("%" + SPACING + "s", " ");
 		}

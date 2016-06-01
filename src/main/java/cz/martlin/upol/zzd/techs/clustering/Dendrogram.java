@@ -1,18 +1,18 @@
 package cz.martlin.upol.zzd.techs.clustering;
 
 import java.io.PrintStream;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
-import cz.martlin.upol.zzd.techs.hubert.ClustersSet;
+import cz.martlin.upol.zzd.techs.hubert.ComputedNextClustering;
 import cz.martlin.upol.zzd.utils.Printable;
 import cz.martlin.upol.zzd.utils.Utils;
 
 public class Dendrogram<T extends DataObject> implements Printable {
 	private static final int SPACING = 6;
-	private final Map<Double, ClustersSet<T>> clusters;
+	private final Map<Integer, ComputedNextClustering<T>> clusters;
 
 	// public Dendrogram(Map<Integer, Set<Cluster<T>>> clusters) {
 	// super();
@@ -21,11 +21,11 @@ public class Dendrogram<T extends DataObject> implements Printable {
 
 	public Dendrogram() {
 		super();
-		this.clusters = new LinkedHashMap<>();
+		this.clusters = new TreeMap<>();
 	}
 
-	public void add(double proximity, ClustersSet<T> clustering) {
-		clusters.put(proximity, clustering);
+	public void add(int m, ComputedNextClustering<T> clustering) {
+		clusters.put(m, clustering);
 	}
 
 	@Override
@@ -60,12 +60,14 @@ public class Dendrogram<T extends DataObject> implements Printable {
 
 	@Override
 	public void print(PrintStream to) {
-		Map<T, Integer> labels = Utils.computeLabelsOf(clusters.values());
+		Map<T, Integer> labels = Utils.computeLabels(clusters.values().iterator().next().getUpdatedClustering());
 
-		for (Entry<Double, ClustersSet<T>> entry : clusters.entrySet()) {
-			to.printf("at %8.2f: ", entry.getKey());
+		for (Entry<Integer, ComputedNextClustering<T>> entry : clusters.entrySet()) {
+			ComputedNextClustering<T> cl = entry.getValue();
+
+			to.printf("at %2d with %8.2f: ", entry.getKey(), cl.getProximity());
 			to.print("[");
-			for (Cluster<T> cluster : entry.getValue()) {
+			for (Cluster<T> cluster : cl.getUpdatedClustering()) {
 				Utils.printCluster(to, cluster, labels, SPACING);
 				to.print(",\t");
 			}

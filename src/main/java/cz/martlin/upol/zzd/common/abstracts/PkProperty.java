@@ -5,5 +5,5 @@ import cz.martlin.upol.zzd.techs.hubert.ThresholdGraph;
 
 public interface PkProperty<T extends DataObject> {
 
-	public boolean matches(ThresholdGraph<T> subgraph);
+	public boolean matches(ThresholdGraph<T> graph);
 }

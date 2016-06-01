@@ -9,12 +9,11 @@ import java.util.Set;
 import org.junit.Test;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
+import cz.martlin.upol.zzd.common.impls.mergers.DisimsAvgMerger;
 import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
 import cz.martlin.upol.zzd.datasets.ints.BasicIntsDisimmilarity;
 import cz.martlin.upol.zzd.datasets.ints.NumericDataObject;
-import cz.martlin.upol.zzd.datasets.ints.DisimsAvgMerger;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
-import cz.martlin.upol.zzd.techs.proximity.ProximityMatrix;
 import cz.martlin.upol.zzd.utils.Utils;
 
 public class ProximityMatrixTest {
