@@ -4,4 +4,5 @@ import java.io.Serializable;
 
 public interface DataObject extends Serializable, Comparable<DataObject> {
 
+	public String getSimpleDesc();
 }

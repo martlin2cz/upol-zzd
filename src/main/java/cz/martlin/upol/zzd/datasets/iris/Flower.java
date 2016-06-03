@@ -2,8 +2,10 @@ package cz.martlin.upol.zzd.datasets.iris;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
 
-public class Plant implements DataObject {
+public class Flower implements DataObject {
 	private static final long serialVersionUID = 2828073343647880423L;
+
+	private final int id;
 
 	private final double sepalLength;
 	private final double sepalWidth;
@@ -11,13 +13,19 @@ public class Plant implements DataObject {
 	private final double petalWidth;
 	private final String className;
 
-	public Plant(double sepalLength, double sepalWidth, double petalLength, double petalWidth, String className) {
+	public Flower(int id, double sepalLength, double sepalWidth, double petalLength, double petalWidth,
+			String className) {
 		super();
+		this.id = id;
 		this.sepalLength = sepalLength;
 		this.sepalWidth = sepalWidth;
 		this.petalLength = petalLength;
 		this.petalWidth = petalWidth;
 		this.className = className;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public double getSepalLength() {
@@ -45,6 +53,7 @@ public class Plant implements DataObject {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((className == null) ? 0 : className.hashCode());
+		result = prime * result + id;
 		long temp;
 		temp = Double.doubleToLongBits(petalLength);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -58,6 +67,12 @@ public class Plant implements DataObject {
 	}
 
 	@Override
+	public String toString() {
+		return "Plant [id=" + id + ", sepalLength=" + sepalLength + ", sepalWidth=" + sepalWidth + ", petalLength="
+				+ petalLength + ", petalWidth=" + petalWidth + ", className=" + className + "]";
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -65,11 +80,13 @@ public class Plant implements DataObject {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Plant other = (Plant) obj;
+		Flower other = (Flower) obj;
 		if (className == null) {
 			if (other.className != null)
 				return false;
 		} else if (!className.equals(other.className))
+			return false;
+		if (id != other.id)
 			return false;
 		if (Double.doubleToLongBits(petalLength) != Double.doubleToLongBits(other.petalLength))
 			return false;
@@ -83,14 +100,8 @@ public class Plant implements DataObject {
 	}
 
 	@Override
-	public String toString() {
-		return "Plant [sepalLength=" + sepalLength + ", sepalWidth=" + sepalWidth + ", petalLength=" + petalLength
-				+ ", petalWidth=" + petalWidth + ", className=" + className + "]";
-	}
-
-	@Override
 	public int compareTo(DataObject o) {
-		Plant p = (Plant) o;
+		Flower p = (Flower) o;
 		int cmp;
 
 		cmp = Double.compare(this.sepalLength, p.sepalLength);
@@ -115,6 +126,11 @@ public class Plant implements DataObject {
 		}
 
 		return 0;
+	}
+	
+	@Override
+	public String getSimpleDesc() {
+		return className.substring(5, 9);
 	}
 
 }

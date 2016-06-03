@@ -2,10 +2,10 @@ package cz.martlin.upol.zzd.datasets.iris;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 
-public class PlantsEuclidianDistance implements DisimmilarityComputer<Plant> {
+public class PlantsEuclidianDistance implements DisimmilarityComputer<Flower> {
 
 	@Override
-	public double disimmilarityOf(Plant first, Plant second) {
+	public double disimmilarityOf(Flower first, Flower second) {
 		double sum = 0.0;
 
 		sum += Math.pow(first.getPetalLength() - second.getPetalLength(), 2);

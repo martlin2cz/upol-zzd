@@ -2,8 +2,10 @@ package cz.martlin.upol.zzd.utils;
 
 import java.io.PrintStream;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,6 +18,8 @@ import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.hubert.ClustersSet;
 
 public class Utils {
+
+	private static final char BAR_CHAR = '#';
 
 	public static <K, V> K findKeyOf(Map<K, V> map, V value) {
 		for (K key : map.keySet()) {
@@ -87,6 +91,18 @@ public class Utils {
 		}
 	}
 
+	public static <T extends DataObject> Map<T, Integer> computeLabelsOfObjects(Collection<T> objects) {
+		Map<T, Integer> labels = new HashMap<>();
+		int i = 0;
+
+		for (T item : objects) {
+			labels.put(item, i);
+			i++;
+		}
+
+		return labels;
+	}
+
 	public static <T extends DataObject> Map<T, Integer> computeLabels(Collection<Cluster<T>> clusters) {
 		Map<T, Integer> labels = new HashMap<>();
 		int i = 0;
@@ -111,15 +127,16 @@ public class Utils {
 
 	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, Map<T, Integer> labels,
 			int spacing) {
-		StringBuilder stb = new StringBuilder();
 
 		for (T item : cluster) {
 			int index = labels.get(item);
-			stb.append("#");
-			stb.append(index);
+			printLabel(to, index);
 		}
 
-		to.printf("%s", stb.toString());
+	}
+
+	public static void printLabel(PrintStream to, int label) {
+		to.print("#" + label);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -144,6 +161,22 @@ public class Utils {
 		}
 
 		return result;
+	}
+
+	public static <T> T nth(Collection<T> objects, Comparator<T> order, int index) {
+		TreeSet<T> set = new TreeSet<>(order);
+		set.addAll(objects);
+
+		ArrayList<T> list = new ArrayList<>(set);
+		return list.get(index); 
+		// TODO rly -1 (else crashes, cuz index can
+									// be size of set)
+	}
+
+	public static void printBar(PrintStream to, int length) {
+		for (int i = 0; i < length; i++) {
+			to.print(BAR_CHAR);
+		}
 	}
 
 }

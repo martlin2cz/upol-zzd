@@ -51,4 +51,9 @@ public class NumericDataObject implements DataObject {
 		return Double.compare(this.value, d.value);
 	}
 
+	@Override
+	public String getSimpleDesc() {
+		return Double.toString(value);
+	}
+
 }
