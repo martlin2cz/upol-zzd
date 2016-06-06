@@ -81,7 +81,7 @@ public class Dataset<T extends DataObject> implements Iterable<T> {
 
 	@Override
 	public String toString() {
-		return "Dataset [items=" + items + "]";
+		return "Dataset " + items + "";
 	}
 
 }

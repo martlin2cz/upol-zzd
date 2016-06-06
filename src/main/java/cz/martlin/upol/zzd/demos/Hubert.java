@@ -13,7 +13,7 @@ import cz.martlin.upol.zzd.datasets.base.Dataset;
 import cz.martlin.upol.zzd.datasets.base.DatasetFilter;
 import cz.martlin.upol.zzd.datasets.iris.IrisFlowersLoader;
 import cz.martlin.upol.zzd.datasets.iris.Flower;
-import cz.martlin.upol.zzd.datasets.iris.PlantsEuclidianDistance;
+import cz.martlin.upol.zzd.datasets.iris.FlowersEuclidianDistance;
 import cz.martlin.upol.zzd.techs.clustering.Dendrogram;
 import cz.martlin.upol.zzd.techs.hubert.HubertAlgorithm;
 
@@ -27,7 +27,7 @@ public class Hubert {
 
 		DisimmilaritiesMerger avgMerger = new DisimsAvgMerger();
 		DisimmilaritiesMerger minMerger = new DisimsMinMerger();
-		DisimmilarityComputer<Flower> disimer = new PlantsEuclidianDistance();
+		DisimmilarityComputer<Flower> disimer = new FlowersEuclidianDistance();
 
 		HubertAlgorithm<Flower> algorithm = new HubertAlgorithm<>(vtxconnProp, avgMerger);
 

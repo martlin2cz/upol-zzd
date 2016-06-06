@@ -2,7 +2,7 @@ package cz.martlin.upol.zzd.datasets.iris;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 
-public class PlantsEuclidianDistance implements DisimmilarityComputer<Flower> {
+public class FlowersEuclidianDistance implements DisimmilarityComputer<Flower> {
 
 	@Override
 	public double disimmilarityOf(Flower first, Flower second) {

@@ -1,21 +1,20 @@
 package cz.martlin.upol.zzd.techs.apriori;
 
-import java.util.Iterator;
 import java.util.List;
 
-import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.datasets.base.Dataset;
+import cz.martlin.upol.zzd.datasets.transactions.Transaction;
+import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
 
-public class Database<T extends DataObject> implements Iterable<Transition<T>> {
+public class Database<E extends TransactionItem, T extends Transaction<E>> extends Dataset<T> {
 
-	private final List<Transition<T>> items;
-
-	public Database(List<Transition<T>> items) {
-		super();
-		this.items = items;
+	public Database(List<T> data) {
+		super(data);
 	}
 
 	@Override
-	public Iterator<Transition<T>> iterator() {
-		return items.iterator();
+	public String toString() {
+		return "Database " + list() + "";
 	}
+
 }

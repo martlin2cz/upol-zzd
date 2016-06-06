@@ -14,6 +14,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.datasets.transactions.Itemset;
+import cz.martlin.upol.zzd.datasets.transactions.Transaction;
+import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
+import cz.martlin.upol.zzd.techs.apriori.Database;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.hubert.ClustersSet;
 
@@ -168,15 +172,49 @@ public class Utils {
 		set.addAll(objects);
 
 		ArrayList<T> list = new ArrayList<>(set);
-		return list.get(index); 
+		return list.get(index);
 		// TODO rly -1 (else crashes, cuz index can
-									// be size of set)
+		// be size of set)
 	}
 
 	public static void printBar(PrintStream to, int length) {
 		for (int i = 0; i < length; i++) {
 			to.print(BAR_CHAR);
 		}
+	}
+
+	public static <E extends TransactionItem> Set<E> collectItems(Database<E, Transaction<E>> database) {
+		Set<E> result = new HashSet<>();
+
+		for (Transaction<E> transaction : database) {
+			for (E item : transaction) {
+				result.add(item);
+			}
+		}
+
+		return result;
+	}
+
+	public static <E extends TransactionItem> Set<Itemset<E>> toSingletonItemsets(Set<E> items) {
+		Set<Itemset<E>> result = new HashSet<>();
+
+		for (E item : items) {
+			Itemset<E> itemset = new Itemset<>(item);
+			result.add(itemset);
+		}
+
+		return result;
+	}
+
+	public static <E extends TransactionItem> Set<Itemset<E>> toItemsets(Set<Set<E>> items) {
+		Set<Itemset<E>> result = new HashSet<>();
+
+		for (Set<E> set : items) {
+			Itemset<E> itemset = new Itemset<>(set);
+			result.add(itemset);
+		}
+
+		return result;
 	}
 
 }

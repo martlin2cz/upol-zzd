@@ -4,14 +4,14 @@ import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.datasets.base.Dataset;
 import cz.martlin.upol.zzd.datasets.iris.IrisFlowersLoader;
 import cz.martlin.upol.zzd.datasets.iris.Flower;
-import cz.martlin.upol.zzd.datasets.iris.PlantsEuclidianDistance;
+import cz.martlin.upol.zzd.datasets.iris.FlowersEuclidianDistance;
 import cz.martlin.upol.zzd.techs.optics.OpticsAlgorithm;
 import cz.martlin.upol.zzd.techs.optics.ReachabilityPlot;
 
 public class Optics {
 
 	public static void main(String[] args) {
-		DisimmilarityComputer<Flower> distancer = new PlantsEuclidianDistance();
+		DisimmilarityComputer<Flower> distancer = new FlowersEuclidianDistance();
 		OpticsAlgorithm<Flower> algorithm = new OpticsAlgorithm<>(distancer);
 
 		IrisFlowersLoader loader = new IrisFlowersLoader();
