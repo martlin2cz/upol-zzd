@@ -59,7 +59,7 @@ public class ReachabilityPlot<T extends DataObject> implements Printable {
 				dist = MAX * STEP;
 			}
 
-			Utils.printBar(to, (int) dist);
+			Utils.printBar(to, (int) dist, '#');
 			to.println();
 		}
 

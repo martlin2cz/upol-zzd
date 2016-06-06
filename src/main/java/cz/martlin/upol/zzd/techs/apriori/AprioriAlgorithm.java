@@ -10,6 +10,12 @@ import cz.martlin.upol.zzd.datasets.transactions.Transaction;
 import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
 import cz.martlin.upol.zzd.utils.Utils;
 
+/**
+ * Implemented by: http://rakesh.agrawal-family.com/papers/vldb94apriori.pdf
+ * @author martin
+ *
+ * @param <E>
+ */
 public class AprioriAlgorithm<E extends TransactionItem> {
 
 	public AprioriAlgorithm() {

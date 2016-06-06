@@ -57,6 +57,10 @@ public class Itemset<T extends TransactionItem> implements Comparable<Itemset<T>
 		return count(BoolFlag.YES);
 	}
 
+	public BoolFlag get(T attribute) {
+		return items.get(attribute);
+	}
+
 	public boolean has(T item) {
 		return items.get(item) == BoolFlag.YES;
 	}
@@ -75,6 +79,10 @@ public class Itemset<T extends TransactionItem> implements Comparable<Itemset<T>
 		return count;
 	}
 
+	public void remove(T attribute) {
+		items.remove(attribute);
+	}
+
 	private Set<T> set(BoolFlag flag) {
 		Set<T> result = new HashSet<>(items.size());
 
@@ -87,8 +95,12 @@ public class Itemset<T extends TransactionItem> implements Comparable<Itemset<T>
 		return result;
 	}
 
-	protected Set<T> set() {
+	public Set<T> set() {
 		return set(BoolFlag.YES);
+	}
+
+	public Set<T> listAll() {
+		return items.keySet();
 	}
 
 	@Override
@@ -208,15 +220,17 @@ public class Itemset<T extends TransactionItem> implements Comparable<Itemset<T>
 		}
 		to.println();
 	}
-	
-	public static <T extends TransactionItem> void print(PrintStream to, Set<Itemset<T>> set, Database<T, Transaction<T>> database) {
+
+	public static <T extends TransactionItem> void print(PrintStream to, Set<Itemset<T>> set,
+			Database<T, Transaction<T>> database) {
 		AprioriAlgorithm<T> alg = new AprioriAlgorithm<>();
 		for (Itemset<T> itemset : set) {
 			to.print("supp=" + alg.countSupport(database, itemset));
 			to.print(": ");
 			to.println(itemset);
-			
+
 		}
 		to.println();
 	}
+
 }

@@ -1,0 +1,8 @@
+"dog", true, 		HAS_LEGS, SWIMS, HAS_LUNGS, MEAT_EATER, CAN_BE_PET
+"fish", false, 		SWIMS, CAN_BE_PET
+"duck", true, 		HAS_LEGS, HAS_WINGS, SWIMS, FLIES,HAS_LUNGS, LAYS_EGGS
+"mouse", true, 		HAS_LEGS, HAS_LUNGS, CAN_BE_PET
+"puma", true, 		HAS_LEGS, HAS_LUNGS, SWIMS, MEAT_EATER
+"microbat (a little vampire, you know ...)", true, HAS_LEGS, HAS_WINGS,HAS_LUNGS, FLIES, MEAT_EATER
+"snake", false, 	HAS_LUNGS, LAYS_EGGS, MEAT_EATER,CAN_BE_PET
+"lizzard", false, 	HAS_LEGS, HAS_LUNGS, LAYS_EGGS,MEAT_EATER, CAN_BE_PET

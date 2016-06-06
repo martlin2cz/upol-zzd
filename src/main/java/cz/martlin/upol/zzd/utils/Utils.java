@@ -23,8 +23,6 @@ import cz.martlin.upol.zzd.techs.hubert.ClustersSet;
 
 public class Utils {
 
-	private static final char BAR_CHAR = '#';
-
 	public static <K, V> K findKeyOf(Map<K, V> map, V value) {
 		for (K key : map.keySet()) {
 			if (map.get(key).equals(value)) {
@@ -173,13 +171,11 @@ public class Utils {
 
 		ArrayList<T> list = new ArrayList<>(set);
 		return list.get(index);
-		// TODO rly -1 (else crashes, cuz index can
-		// be size of set)
 	}
 
-	public static void printBar(PrintStream to, int length) {
+	public static void printBar(PrintStream to, int length, char c) {
 		for (int i = 0; i < length; i++) {
-			to.print(BAR_CHAR);
+			to.print(c);
 		}
 	}
 
