@@ -7,9 +7,9 @@ import java.util.Set;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.Printable;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.clustering.ObjectsDoublesMatrix;
-import cz.martlin.upol.zzd.utils.Printable;
 
 public class ThresholdGraph<T extends DataObject> implements Printable, Iterable<ClustersTuple<T>> {
 

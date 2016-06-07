@@ -8,7 +8,7 @@ import java.util.Set;
 import cz.martlin.upol.zzd.datasets.transactions.Itemset;
 import cz.martlin.upol.zzd.datasets.transactions.Transaction;
 import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
-import cz.martlin.upol.zzd.utils.Utils;
+import cz.martlin.upol.zzd.misc.Utils;
 
 /**
  * Implemented by: http://rakesh.agrawal-family.com/papers/vldb94apriori.pdf

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
-import cz.martlin.upol.zzd.utils.Utils;
 
 public class ClustersSet<T extends DataObject> extends HashSet<Cluster<T>> {
 

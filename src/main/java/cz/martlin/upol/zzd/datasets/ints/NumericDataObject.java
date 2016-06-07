@@ -4,12 +4,20 @@ import cz.martlin.upol.zzd.datasets.base.DataObject;
 
 public class NumericDataObject implements DataObject {
 	private static final long serialVersionUID = -989805760149754017L;
+	private static int nextId;
 
+	private final int id;
 	private final double value;
 
 	public NumericDataObject(double value) {
 		super();
+		this.id = nextId++;
 		this.value = value;
+	}
+
+	@Override
+	public int getID() {
+		return id;
 	}
 
 	public double getValue() {

@@ -1,8 +1,8 @@
 package cz.martlin.upol.zzd.techs.hubert;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
-import cz.martlin.upol.zzd.utils.Utils;
 
 public class ComputedNextClustering<T extends DataObject> {
 

@@ -1,4 +1,4 @@
-package cz.martlin.upol.zzd.utils;
+package cz.martlin.upol.zzd.misc;
 
 import java.io.PrintStream;
 import java.lang.reflect.Array;
@@ -20,6 +20,7 @@ import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
 import cz.martlin.upol.zzd.techs.apriori.Database;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.hubert.ClustersSet;
+import cz.martlin.upol.zzd.techs.hubert.ComputedNextClustering;
 
 public class Utils {
 
@@ -85,60 +86,55 @@ public class Utils {
 		return newClustering;
 	}
 
-	public static <T extends DataObject> void printLabels(PrintStream to, Map<T, Integer> labels) {
+	public static <T extends DataObject> void printLabels(PrintStream to, Collection<T> objects) {
 		to.println("Where:");
-		for (Integer label : new TreeSet<>(labels.values())) {
-			T object = Utils.findKeyOf(labels, label);
-			to.println("#" + label + ": " + object);
+		for (T object : objects) {
+			printLongerLabel(to, object);
+			to.print(":\t");
+			to.println(object);
 		}
 	}
 
-	public static <T extends DataObject> Map<T, Integer> computeLabelsOfObjects(Collection<T> objects) {
-		Map<T, Integer> labels = new HashMap<>();
-		int i = 0;
+	public static <T extends DataObject> void printLabelsOfClusters(PrintStream to, Collection<Cluster<T>> clusters) {
+		Set<T> objects = new HashSet<>();
 
-		for (T item : objects) {
-			labels.put(item, i);
-			i++;
+		for (Cluster<T> cluster : clusters) {
+			objects.addAll(cluster);
 		}
 
-		return labels;
+		printLabels(to, objects);
 	}
 
-	public static <T extends DataObject> Map<T, Integer> computeLabels(Collection<Cluster<T>> clusters) {
-		Map<T, Integer> labels = new HashMap<>();
-		int i = 0;
+	public static <T extends DataObject> void printLabelsOfClusterings(PrintStream to,
+			Collection<ComputedNextClustering<T>> clusterings) {
 
-		for (T item : objectify(clusters)) {
-			labels.put(item, i);
-			i++;
+		Set<T> objects = new HashSet<>();
+
+		for (ComputedNextClustering<T> clustering : clusterings) {
+			if (clustering.getMerged() != null) {
+				//TODO hack
+				objects.addAll(clustering.getMerged());
+			}
 		}
 
-		return labels;
+		printLabels(to, objects);
+
 	}
 
-	public static <T extends DataObject> Map<T, Integer> computeLabelsOf(Collection<ClustersSet<T>> collection) {
-		Map<T, Integer> labels = new HashMap<>();
-
-		for (Collection<Cluster<T>> cl : collection) {
-			labels.putAll(computeLabels(cl));
-		}
-
-		return labels;
-	}
-
-	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, Map<T, Integer> labels,
-			int spacing) {
+	public static <T extends DataObject> void printCluster(PrintStream to, Cluster<T> cluster, int spacing) {
 
 		for (T item : cluster) {
-			int index = labels.get(item);
-			printLabel(to, index);
+			printLabel(to, item);
 		}
 
 	}
 
-	public static void printLabel(PrintStream to, int label) {
-		to.print("#" + label);
+	public static <T extends DataObject> void printLabel(PrintStream to, T object) {
+		to.print("#" + object.getID());
+	}
+
+	public static <T extends DataObject> void printLongerLabel(PrintStream to, T object) {
+		to.printf("#%3d (%5s)\t", object.getID(), object.getSimpleDesc());
 	}
 
 	@SuppressWarnings("unchecked")

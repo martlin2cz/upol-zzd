@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import cz.martlin.upol.zzd.misc.SubsetsComputer;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.apriori.AprioriAlgorithm;
 import cz.martlin.upol.zzd.techs.apriori.Database;
-import cz.martlin.upol.zzd.utils.SubsetsComputer;
-import cz.martlin.upol.zzd.utils.Utils;
 
 public class Itemset<T extends TransactionItem> implements Comparable<Itemset<T>>, Iterable<T> {
 

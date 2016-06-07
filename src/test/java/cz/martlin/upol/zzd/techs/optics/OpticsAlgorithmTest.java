@@ -37,7 +37,7 @@ public class OpticsAlgorithmTest {
 		Set<NumericDataObject> objs = createSecond();
 
 		int minPts = 1;
-		double epsilon = 3.0;
+		double epsilon = 2.0;
 		ReachabilityPlot<NumericDataObject> result = alg.run(objs, epsilon, minPts);
 
 		result.print(System.out);

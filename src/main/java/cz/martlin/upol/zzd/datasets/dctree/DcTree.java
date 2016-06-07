@@ -4,9 +4,9 @@ import java.io.PrintStream;
 
 import cz.martlin.upol.zzd.datasets.transactions.BoolFlag;
 import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
+import cz.martlin.upol.zzd.misc.Printable;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.dctree.ClasifiableTransaction;
-import cz.martlin.upol.zzd.utils.Printable;
-import cz.martlin.upol.zzd.utils.Utils;
 
 public class DcTree implements Printable {
 

@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.Printable;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.hubert.ComputedNextClustering;
-import cz.martlin.upol.zzd.utils.Printable;
-import cz.martlin.upol.zzd.utils.Utils;
 
 public class Dendrogram<T extends DataObject> implements Printable {
 	private static final int SPACING = 6;
@@ -60,22 +60,31 @@ public class Dendrogram<T extends DataObject> implements Printable {
 
 	@Override
 	public void print(PrintStream to) {
-		Map<T, Integer> labels = Utils.computeLabels(clusters.values().iterator().next().getUpdatedClustering());
+		// Map<T, Integer> labels =
+		// Utils.computeLabels(clusters.values().iterator().next().getUpdatedClustering());
 
 		for (Entry<Integer, ComputedNextClustering<T>> entry : clusters.entrySet()) {
 			ComputedNextClustering<T> cl = entry.getValue();
+			to.printf("at %2d with %8.2f", entry.getKey(), cl.getProximity());
 
-			to.printf("at %2d with %8.2f: ", entry.getKey(), cl.getProximity());
+			if (cl.getFromFirst() != null && cl.getFromSecond() != null) {
+				to.print(" merged ");
+				Utils.printCluster(to, cl.getFromFirst(), 0);
+				to.print("  and  ");
+				Utils.printCluster(to, cl.getFromSecond(), 0);
+			}
+
+			to.print(": \t");
 			to.print("[");
 			for (Cluster<T> cluster : cl.getUpdatedClustering()) {
-				Utils.printCluster(to, cluster, labels, SPACING);
+				Utils.printCluster(to, cluster, SPACING);
 				to.print(",\t");
 			}
 			to.print("]");
 			to.println();
 		}
 
-		Utils.printLabels(to, labels);
+		Utils.printLabelsOfClusterings(to, clusters.values());
 	}
 
 }

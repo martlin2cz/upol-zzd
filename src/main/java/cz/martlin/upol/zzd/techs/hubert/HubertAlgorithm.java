@@ -10,9 +10,9 @@ import cz.martlin.upol.zzd.common.impls.mergers.DisimsMinMerger;
 import cz.martlin.upol.zzd.common.impls.props.IsCompleteProperty;
 import cz.martlin.upol.zzd.common.impls.props.IsConnectedProperty;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.clustering.Dendrogram;
 import cz.martlin.upol.zzd.techs.clustering.ObjectsDoublesMatrix;
-import cz.martlin.upol.zzd.utils.Utils;
 
 /**
  * 

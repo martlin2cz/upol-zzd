@@ -17,7 +17,8 @@ public class Transaction<T extends TransactionItem> implements DataObject, Itera
 		this.items = items;
 	}
 
-	public int getId() {
+	@Override
+	public int getID() {
 		return id;
 	}
 

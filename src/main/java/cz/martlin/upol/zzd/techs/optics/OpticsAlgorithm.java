@@ -6,15 +6,13 @@ import java.util.Set;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
-import cz.martlin.upol.zzd.utils.Utils;
+import cz.martlin.upol.zzd.misc.Utils;
 
 public class OpticsAlgorithm<T extends DataObject> {
 
-	private final DisimmilarityComputer<T> distancer; // TODO rly?
-	// distancer/disimilaritier?
+	private final DisimmilarityComputer<T> distancer;
 
 	public OpticsAlgorithm(DisimmilarityComputer<T> distancer) {
-		// TODO inits
 		this.distancer = distancer;
 	}
 
@@ -118,10 +116,10 @@ public class OpticsAlgorithm<T extends DataObject> {
 
 	private Double minPtsDistance(Set<ObjectMetadata<T>> objects, ObjectMetadata<T> object, double epsilon,
 			int minPts) {
-		Set<ObjectMetadata<T>> neighbors = findNeighbors(objects, object, epsilon);
+		//Set<ObjectMetadata<T>> neighbors = findNeighbors(objects, object, epsilon);
 
 		Comparator<ObjectMetadata<T>> cmp = new NeighsByDistCmp<>(distancer, object);
-		ObjectMetadata<T> minPthsTh = Utils.nth(neighbors, cmp, minPts);
+		ObjectMetadata<T> minPthsTh = Utils.nth(objects, cmp, minPts);
 
 		return distancer.disimmilarityOf(object.getObject(), minPthsTh.getObject());
 	}

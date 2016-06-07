@@ -5,9 +5,9 @@ import java.util.Set;
 
 import cz.martlin.upol.zzd.common.abstracts.PkProperty;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.SubsetsComputer;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
 import cz.martlin.upol.zzd.techs.hubert.ThresholdGraph;
-import cz.martlin.upol.zzd.utils.SubsetsComputer;
 
 public class IsKvertexConnected<T extends DataObject> implements PkProperty<T> {
 	private final SubsetsComputer<Cluster<T>> subseter = new SubsetsComputer<>();

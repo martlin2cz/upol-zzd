@@ -13,9 +13,9 @@ import java.util.TreeMap;
 
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
+import cz.martlin.upol.zzd.misc.Printable;
+import cz.martlin.upol.zzd.misc.Utils;
 import cz.martlin.upol.zzd.techs.hubert.ClustersTuple;
-import cz.martlin.upol.zzd.utils.Printable;
-import cz.martlin.upol.zzd.utils.Utils;
 
 public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, Iterable<ClustersTuple<T>> {
 	private static final int SPACING = 6;
@@ -124,21 +124,20 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 
 	@Override
 	public void print(PrintStream to) {
-		Map<T, Integer> labels = Utils.computeLabels(clusters.values());
 
-		printHeader(to, labels);
+		printHeader(to);
 
-		printFields(to, labels);
+		printFields(to);
 
-		Utils.printLabels(to, labels);
+		Utils.printLabelsOfClusters(to, clusters.values());
 
 		to.println();
 	}
 
-	private void printFields(PrintStream to, Map<T, Integer> labels) {
+	private void printFields(PrintStream to) {
 
 		for (Cluster<T> row : clusters.values()) {
-			Utils.printCluster(to, row, labels, SPACING);
+			Utils.printCluster(to, row, SPACING);
 			to.print("\t");
 
 			for (Cluster<T> col : clusters.values()) {
@@ -151,12 +150,12 @@ public class ObjectsDoublesMatrix<T extends DataObject> implements Printable, It
 		}
 	}
 
-	private void printHeader(PrintStream to, Map<T, Integer> labels) {
+	private void printHeader(PrintStream to) {
 		to.print("------");
 		to.print("\t");
 
 		for (Cluster<T> cluster : clusters.values()) {
-			Utils.printCluster(to, cluster, labels, SPACING);
+			Utils.printCluster(to, cluster,  SPACING);
 
 			to.print("\t");
 		}

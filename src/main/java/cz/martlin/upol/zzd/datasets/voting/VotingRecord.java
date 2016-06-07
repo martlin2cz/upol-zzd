@@ -19,7 +19,7 @@ public class VotingRecord extends ClasifiableTransaction<VotingEntry, String> {
 
 	@Override
 	public String getSimpleDesc() {
-		return "#" + getId() + "(" + party + ")";
+		return "#" + getID() + "(" + party + ")";
 	}
 
 }

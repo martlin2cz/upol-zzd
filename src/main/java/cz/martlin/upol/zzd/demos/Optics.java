@@ -17,8 +17,8 @@ public class Optics {
 		IrisFlowersLoader loader = new IrisFlowersLoader();
 		Dataset<Flower> plants = loader.load();
 
-		final int minPts = 40;
-		final double epsilon = 3.5;
+		final int minPts = 10;
+		final double epsilon = 2.5;
 		ReachabilityPlot<Flower> plot = algorithm.run(plants.set(), epsilon, minPts);
 
 		plot.print(System.out);

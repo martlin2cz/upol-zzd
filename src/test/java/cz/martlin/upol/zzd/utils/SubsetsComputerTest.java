@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import cz.martlin.upol.zzd.misc.SubsetsComputer;
+
 public class SubsetsComputerTest {
 
 	private final SubsetsComputer<Integer> computer = new SubsetsComputer<>();

@@ -1,4 +1,4 @@
-package cz.martlin.upol.zzd.utils;
+package cz.martlin.upol.zzd.misc;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -24,7 +24,8 @@ public class Flower implements DataObject {
 		this.className = className;
 	}
 
-	public int getId() {
+	@Override
+	public int getID() {
 		return id;
 	}
 
@@ -127,7 +128,7 @@ public class Flower implements DataObject {
 
 		return 0;
 	}
-	
+
 	@Override
 	public String getSimpleDesc() {
 		return className.substring(5, 9);

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import cz.martlin.upol.zzd.datasets.transactions.BoolFlag;
 import cz.martlin.upol.zzd.datasets.transactions.TransactionItem;
-import cz.martlin.upol.zzd.utils.Utils;
+import cz.martlin.upol.zzd.misc.Utils;
 
 public class DcInternalNode<E extends TransactionItem> extends DcNode {
 
