@@ -10,7 +10,6 @@ import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.common.abstracts.PkProperty;
 import cz.martlin.upol.zzd.common.impls.mergers.DisimsAvgMerger;
 import cz.martlin.upol.zzd.common.impls.props.IsCompleteProperty;
-import cz.martlin.upol.zzd.common.impls.props.IsConnectedProperty;
 import cz.martlin.upol.zzd.datasets.ints.BasicIntsDisimmilarity;
 import cz.martlin.upol.zzd.datasets.ints.NumericDataObject;
 import cz.martlin.upol.zzd.techs.clustering.Cluster;
@@ -76,18 +75,23 @@ public class HubertAlgorithmTest {
 
 		matrix.setAt(X4, X5, 7.6);
 
-		PkProperty<NumericDataObject> completness = new IsCompleteProperty<>();
-		PkProperty<NumericDataObject> connectness = new IsConnectedProperty<>();
-		DisimmilaritiesMerger merger = /* new DisimsMinMerger(); */new DisimsAvgMerger();
+		// PkProperty<NumericDataObject> completness = new
+		// IsCompleteProperty<>();
+		// PkProperty<NumericDataObject> connectness = new
+		// IsConnectedProperty<>();
+		// DisimmilaritiesMerger merger = /* new DisimsMinMerger(); */new
+		// DisimsAvgMerger();
 
 		System.out.println("==========================\nCompleted:");
-		HubertAlgorithm<NumericDataObject> algCompl = new HubertAlgorithm<>(completness, merger);
+		HubertAlgorithm<NumericDataObject> algCompl = HubertAlgorithm.createCompleteLink();
+		// new HubertAlgorithm<>(completness, merger);
 		Dendrogram<NumericDataObject> dendCompl = algCompl.run(objects, new ObjectsDoublesMatrix<>(matrix));
 		dendCompl.print(System.out);
 
-		System.out.println("==========================\nConnected:");
-		HubertAlgorithm<NumericDataObject> algConn = new HubertAlgorithm<>(connectness, merger);
-		Dendrogram<NumericDataObject> dendConn = algConn.run(objects, new ObjectsDoublesMatrix<>(matrix));
+		System.out.println("==========================\nSingle:");
+		HubertAlgorithm<NumericDataObject> algSingle = HubertAlgorithm.createSingleLink();
+		// new HubertAlgorithm<>(connectness, merger);
+		Dendrogram<NumericDataObject> dendConn = algSingle.run(objects, new ObjectsDoublesMatrix<>(matrix));
 		dendConn.print(System.out);
 
 	}

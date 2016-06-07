@@ -22,7 +22,7 @@ public class OpticsAlgorithmTest {
 		Set<NumericDataObject> objs = createFirst();
 
 		int minPts = 2;
-		double epsilon = 3.0;
+		double epsilon = 7.0;
 		ReachabilityPlot<NumericDataObject> result = alg.run(objs, epsilon, minPts);
 
 		result.print(System.out);
@@ -36,7 +36,7 @@ public class OpticsAlgorithmTest {
 
 		Set<NumericDataObject> objs = createSecond();
 
-		int minPts = 2;
+		int minPts = 1;
 		double epsilon = 3.0;
 		ReachabilityPlot<NumericDataObject> result = alg.run(objs, epsilon, minPts);
 
@@ -71,10 +71,12 @@ public class OpticsAlgorithmTest {
 
 	private Set<NumericDataObject> createFirst() {
 		Set<NumericDataObject> objs = new HashSet<>();
+		
 		objs.add(new NumericDataObject(4.0));
 		objs.add(new NumericDataObject(8.5));
 		objs.add(new NumericDataObject(3.65));
 		objs.add(new NumericDataObject(2.11));
+		
 		return objs;
 	}
 

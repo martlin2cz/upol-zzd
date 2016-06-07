@@ -5,6 +5,10 @@ import java.util.Set;
 import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.common.abstracts.PkProperty;
+import cz.martlin.upol.zzd.common.impls.mergers.DisimsMaxMerger;
+import cz.martlin.upol.zzd.common.impls.mergers.DisimsMinMerger;
+import cz.martlin.upol.zzd.common.impls.props.IsCompleteProperty;
+import cz.martlin.upol.zzd.common.impls.props.IsConnectedProperty;
 import cz.martlin.upol.zzd.datasets.base.DataObject;
 import cz.martlin.upol.zzd.techs.clustering.Dendrogram;
 import cz.martlin.upol.zzd.techs.clustering.ObjectsDoublesMatrix;
@@ -48,7 +52,7 @@ public class HubertAlgorithm<T extends DataObject> {
 		ComputedNextClustering<T> initial = new ComputedNextClustering<>(null, null, null, clustering, proximity);
 		result.add(m, initial);
 		m++;
-		
+
 		do {
 
 			// step 2
@@ -85,7 +89,6 @@ public class HubertAlgorithm<T extends DataObject> {
 			}
 		}
 
-		
 		return ComputedNextClustering.create(minClusters, currentClustering, minValue);
 	}
 
@@ -111,8 +114,22 @@ public class HubertAlgorithm<T extends DataObject> {
 				}
 			}
 		}
-		
+
 		return minDistance;
+	}
+
+	public static <T extends DataObject> HubertAlgorithm<T> createSingleLink() {
+		PkProperty<T> property = new IsConnectedProperty<>();
+		DisimmilaritiesMerger merger = new DisimsMinMerger();
+
+		return new HubertAlgorithm<>(property, merger);
+	}
+
+	public static <T extends DataObject> HubertAlgorithm<T> createCompleteLink() {
+		PkProperty<T> property = new IsCompleteProperty<>();
+		DisimmilaritiesMerger merger = new DisimsMaxMerger();
+
+		return new HubertAlgorithm<>(property, merger);
 	}
 
 }

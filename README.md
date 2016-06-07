@@ -7,4 +7,8 @@ Currently implemented:
  - [x] OPTICS (on Iris dataset)
  - [ ] Optimal cluster count (on Iris dataset)
  - [x] Apriori algorithm (on Congressional Voting Records)
- - [ ] Decision tree (on Congressional Voting Records)
+ - [x] Decision tree (on Congressional Voting Records)
+ 
+ See classes inside the `cz.martlin.upol.zzd.demos` package to see demonstrations of listed techniques. Or the JUnit tests of particular algorithms for some small testing datasets.
+ 
+ This is currently version to submit. If succeeds, no future development will be done.

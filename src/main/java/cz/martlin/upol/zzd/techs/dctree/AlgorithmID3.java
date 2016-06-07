@@ -15,17 +15,22 @@ import cz.martlin.upol.zzd.techs.apriori.Database;
 
 public class AlgorithmID3<E extends TransactionItem, T extends ClasifiableTransaction<E, C>, C> {
 	private final SplitCriteria<E, T, C> split;
-	private final PruningMethod pruning; // TODO hehe, use ... somehow ...
+	private final PruningMethod<E, T, C> pruning;
 
-	public AlgorithmID3(SplitCriteria<E, T, C> split, PruningMethod pruning) {
+	public AlgorithmID3(SplitCriteria<E, T, C> split, PruningMethod<E, T, C> pruning) {
 		super();
 		this.split = split;
 		this.pruning = pruning;
 	}
 
 	public DcTree run(Database<E, T> database) {
-		DcNode node = runRec(database);
-		return new DcTree(node);
+		Database<E, T> prepared = pruning.prepareData(database);
+
+		DcNode node = runRec(prepared);
+		DcTree tree = new DcTree(node);
+
+		DcTree pruned = pruning.prune(tree);
+		return pruned;
 	}
 
 	private DcNode runRec(Database<E, T> database) {

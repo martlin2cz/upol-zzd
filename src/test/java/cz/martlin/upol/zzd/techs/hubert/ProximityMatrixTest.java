@@ -76,21 +76,21 @@ public class ProximityMatrixTest {
 		Cluster<NumericDataObject> col2 = Utils.createSingleton(new NumericDataObject(25));
 		assertEquals(0.0, mx1.getAt(col1, col1), EPSILON);
 		assertEquals(0.0, mx1.getAt(col2, col2), EPSILON);
-		assertEquals(0.0625, mx1.getAt(col1, col2), EPSILON);
-		assertEquals(0.0625, mx1.getAt(col2, col1), EPSILON);
+		assertEquals(16.0, mx1.getAt(col1, col2), EPSILON);
+		assertEquals(16.0, mx1.getAt(col2, col1), EPSILON);
 
 		Iterator<ClustersTuple<NumericDataObject>> iter = mx1.iterator();
 		assertEquals(0.0, mx1.getAt(iter.next()), EPSILON);
-		assertEquals(0.2/3.0, mx1.getAt(iter.next()), EPSILON);
-		assertEquals(0.0625, mx1.getAt(iter.next()), EPSILON);
-		assertEquals(1.0/21.0, mx1.getAt(iter.next()), EPSILON);
+		assertEquals(15, mx1.getAt(iter.next()), EPSILON);
+		assertEquals(16, mx1.getAt(iter.next()), EPSILON);
+		assertEquals(21, mx1.getAt(iter.next()), EPSILON);
 
 		assertEquals(0.0, mx1.getAt(iter.next()), EPSILON);
 		assertEquals(1.0, mx1.getAt(iter.next()), EPSILON);
-		assertEquals(0.5/3.0, mx1.getAt(iter.next()), EPSILON);
+		assertEquals(6.0, mx1.getAt(iter.next()), EPSILON);
 
 		assertEquals(0.0, mx1.getAt(iter.next()), EPSILON);
-		assertEquals(0.2, mx1.getAt(iter.next()), EPSILON);
+		assertEquals(5.0, mx1.getAt(iter.next()), EPSILON);
 
 		assertTrue(iter.hasNext());
 		assertEquals(0.0, mx1.getAt(iter.next()), EPSILON);

@@ -6,14 +6,12 @@ import cz.martlin.upol.zzd.common.abstracts.DisimmilaritiesMerger;
 import cz.martlin.upol.zzd.common.abstracts.DisimmilarityComputer;
 import cz.martlin.upol.zzd.common.abstracts.PkProperty;
 import cz.martlin.upol.zzd.common.impls.mergers.DisimsAvgMerger;
-import cz.martlin.upol.zzd.common.impls.mergers.DisimsMinMerger;
 import cz.martlin.upol.zzd.common.impls.props.HasDiameterProperty;
-import cz.martlin.upol.zzd.common.impls.props.IsKvertexConnected;
 import cz.martlin.upol.zzd.datasets.base.Dataset;
 import cz.martlin.upol.zzd.datasets.base.DatasetFilter;
-import cz.martlin.upol.zzd.datasets.iris.IrisFlowersLoader;
 import cz.martlin.upol.zzd.datasets.iris.Flower;
 import cz.martlin.upol.zzd.datasets.iris.FlowersEuclidianDistance;
+import cz.martlin.upol.zzd.datasets.iris.IrisFlowersLoader;
 import cz.martlin.upol.zzd.techs.clustering.Dendrogram;
 import cz.martlin.upol.zzd.techs.hubert.HubertAlgorithm;
 
@@ -22,14 +20,15 @@ public class Hubert {
 	public static void main(String[] args) {
 		Dataset<Flower> dataset = prepareDataset();
 
-		PkProperty<Flower> diameterProp = new HasDiameterProperty<>(2);
-		PkProperty<Flower> vtxconnProp = new IsKvertexConnected<>(2);
+		PkProperty<Flower> property = new HasDiameterProperty<>(2);
+		// new IsKvertexConnected<>(2);
 
-		DisimmilaritiesMerger avgMerger = new DisimsAvgMerger();
-		DisimmilaritiesMerger minMerger = new DisimsMinMerger();
+		DisimmilaritiesMerger merger = new DisimsAvgMerger();
+		// new DisimsMinMerger();
+		// new DisimsMaxMerger();
 		DisimmilarityComputer<Flower> disimer = new FlowersEuclidianDistance();
 
-		HubertAlgorithm<Flower> algorithm = new HubertAlgorithm<>(vtxconnProp, avgMerger);
+		HubertAlgorithm<Flower> algorithm = new HubertAlgorithm<>(property, merger);
 
 		Set<Flower> objects = dataset.set();
 

@@ -6,7 +6,7 @@ public class DisimsMinMerger implements DisimmilaritiesMerger {
 
 	@Override
 	public double mergeDisimmilarities(double disim1, double disim2) {
-		return Math.min(disim1, disim2) + 1/10000000.0;
+		return Math.min(disim1, disim2);// + 1/10000000.0;
 	}
 
 }
